@@ -1,0 +1,15 @@
+<?php
+
+namespace {{namespace}};
+
+use Dmandrade\FormBuilder\Form;
+
+class {{class}} extends Form
+{
+    public function buildForm()
+    {
+        {{fields}}
+
+         $this->addDefaultActions();
+    }
+}

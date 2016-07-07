@@ -1,0 +1,28 @@
+{
+  "name": "dmandrade/formbuilder",
+  "description": "Form builder",
+  "require": {
+    "laravelcollective/html": "^5.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.4"
+  },
+  "authors": [
+    {
+      "name": "Danilo Andrade",
+      "email": "danilo@daniloandrade.net"
+    }
+  ],
+  "autoload": {
+    "classmap": [
+      "database"
+    ],
+    "psr-4": {
+      "Dmandrade\\FormBuilder\\": "src/FormBuilder/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "minimum-stability": "dev"
+}
