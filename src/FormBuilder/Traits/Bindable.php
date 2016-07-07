@@ -8,9 +8,9 @@ trait Bindable
 {
     protected $bindings = array();
 
-    public function getBinding($binding, $default=NULL)
+    public function getBinding($binding, $default = NULL)
     {
-        if ( isset($this->bindings[$binding]))
+        if (isset($this->bindings[$binding]))
             return $this->bindings[$binding];
 
         return $default;
@@ -25,7 +25,7 @@ trait Bindable
 
     public function unbind($event)
     {
-        if ( isset($this->bindings[$event]) )
+        if (isset($this->bindings[$event]))
             unset($this->bindings[$event]);
 
         return $this;
@@ -36,7 +36,7 @@ trait Bindable
         $args = func_get_args();
         $event = array_shift($args);
 
-        if ( isset($this->bindings[$event]) )
+        if (isset($this->bindings[$event]))
             return call_user_func_array($this->bindings[$event], $args);
 
         return '';

@@ -48,8 +48,8 @@
                                 var item = data[i];
                                 @foreach($options['formatter']['libelle'] as $libelle)
 
-                                if (typeof(item.{!! $libelle  !!} ) != 'undefined' && item.{!! $libelle  !!}    != null) {
-                                    libelle += item.{!! $libelle  !!}   + ' ';
+                                if (typeof(item.{!! $libelle  !!} ) != 'undefined' && item.{!! $libelle  !!}     != null) {
+                                    libelle += item.{!! $libelle  !!}    + ' ';
                                 }
 
                                 @endforeach
@@ -65,8 +65,8 @@
                                 var item = data[i];
 
                                 @foreach($options['formatter']['libelle'] as $libelle)
-                                if (typeof(item.{!! $libelle  !!}) != 'undefined' && item.{!! $libelle  !!}    != null) {
-                                    libelle += item.{!! $libelle  !!}   + ' ';
+                                if (typeof(item.{!! $libelle  !!}) != 'undefined' && item.{!! $libelle  !!}     != null) {
+                                    libelle += item.{!! $libelle  !!}    + ' ';
                                 }
                                 @endforeach
 
@@ -155,8 +155,8 @@
 
                                         var libelle = '';
                                         @foreach($options['formatter']['libelle'] as $libelle)
-                                        if (typeof(item.{!! $libelle  !!} ) != 'undefined' && item.{!! $libelle  !!}    != null) {
-                                            libelle += item.{!! $libelle  !!}   + ' ';
+                                        if (typeof(item.{!! $libelle  !!} ) != 'undefined' && item.{!! $libelle  !!}     != null) {
+                                            libelle += item.{!! $libelle  !!}    + ' ';
                                         }
                                         @endforeach
 
@@ -166,8 +166,8 @@
                                     formatSelection: function format(item) {
                                         var libelle = '';
                                         @foreach($options['formatter']['libelle'] as $libelle)
-                                        if (typeof(item.{!! $libelle  !!} ) != 'undefined' && item.{!! $libelle  !!}    != null) {
-                                            libelle += item.{!! $libelle  !!}   + ' ';
+                                        if (typeof(item.{!! $libelle  !!} ) != 'undefined' && item.{!! $libelle  !!}     != null) {
+                                            libelle += item.{!! $libelle  !!}    + ' ';
                                         }
                                         @endforeach
 
@@ -175,6 +175,7 @@
                                     }
                                 });
                         @endif
+
 
 
 

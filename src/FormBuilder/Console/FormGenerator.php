@@ -65,9 +65,9 @@ class FormGenerator
      */
     public function getClassInfo($name)
     {
-        $explodedClassNamespace = explode('\\', $name);
-        $className = array_pop($explodedClassNamespace);
-        $fullNamespace = join('\\', $explodedClassNamespace);
+        $classNameSpace = explode('\\', $name);
+        $className = array_pop($classNameSpace);
+        $fullNamespace = join('\\', $classNameSpace);
 
         return (object)[
             'namespace' => $fullNamespace,

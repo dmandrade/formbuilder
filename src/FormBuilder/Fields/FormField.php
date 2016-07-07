@@ -166,19 +166,20 @@ abstract class FormField
             $showError = $this->parent->haveErrorsEnabled();
         }
 
-        if(isset($this->options['locales']) and is_array($this->options['locales'])) {
+        if (isset($this->options['locales']) and is_array($this->options['locales'])) {
             return $this->localizedRender($showLabel, $showField, $showError);
         }
 
         return $this->prepareRender($this->name, $this->options, $showLabel, $showField, $showError);
     }
 
-    protected function localizedRender($showLabel, $showField, $showError){
+    protected function localizedRender($showLabel, $showField, $showError)
+    {
         $languages = [];
         $html = '';
 
         foreach ($this->options['locales'] as $locale => $localeOptions) {
-            if(!is_array($localeOptions)){
+            if (!is_array($localeOptions)) {
                 $locale = $localeOptions;
                 $localeOptions = [];
             }
@@ -186,7 +187,7 @@ abstract class FormField
             $localeOptions = array_replace_recursive($this->options, $localeOptions);
             $localeName = $locale . '[' . $this->name . ']';
             $localeOptions['attr']['data-language'] = $locale;
-            $localeOptions['wrapper']['class'] .= ' '.$locale;
+            $localeOptions['wrapper']['class'] .= ' ' . $locale;
             $localeOptions['wrapperAttrs'] = $this->formHelper->prepareAttributes($localeOptions['wrapper']);
 
             if (!isset($localeOptions['label']))
@@ -195,10 +196,11 @@ abstract class FormField
             $html .= $this->prepareRender($localeName, $localeOptions, $showLabel, $showField, $showError);
         }
 
-        return '<div class="form-localized-group active-'.app()->getLocale().'" data-languages="'.implode($languages, ',').'">'.$html.'</div>';
+        return '<div class="form-localized-group active-' . app()->getLocale() . '" data-languages="' . implode($languages, ',') . '">' . $html . '</div>';
     }
 
-    protected function prepareRender($name, $options = [], $showLabel = true, $showField = true, $showError = true){
+    protected function prepareRender($name, $options = [], $showLabel = true, $showField = true, $showError = true)
+    {
         return $this->formHelper->getView()->make(
             $this->getViewTemplate(),
             [
@@ -665,18 +667,19 @@ abstract class FormField
     {
         return $this->getOption($name);
     }
+
     /**
      * Lets us add custom field settings to be used during the render process.
      *
-     * @param  string $name      Setting name
-     * @param  array  $arguments Setting value(s)
+     * @param  string $name Setting name
+     * @param  array $arguments Setting value(s)
      *
      */
     public function __call($name, $arguments)
     {
-        if ( method_exists($this, $name) )
+        if (method_exists($this, $name))
             return call_user_func_array(array($this, $name), $arguments);
-        elseif($name == "type" and $this->formHelper->getFieldType($arguments[0]))
+        elseif ($name == "type" and $this->formHelper->getFieldType($arguments[0]))
             return $this->parent->modify($this->name, $arguments[0], [], true);
 
         return $this->options[$name] = $arguments[0];

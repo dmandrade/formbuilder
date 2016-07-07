@@ -3,12 +3,12 @@
 use Dmandrade\FormBuilder\Fields\FormField;
 use Dmandrade\FormBuilder\Form;
 
-\Collective\Html\HtmlBuilder::macro('buttonWithIcon', function($title, $options = []) {
-    if (isset($options['icon'])){
+\Collective\Html\HtmlBuilder::macro('buttonWithIcon', function ($title, $options = []) {
+    if (isset($options['icon'])) {
         $icon = $options['icon'];
         unset($options['icon']);
     }
-    return '<button '.$this->attributes($options).'>'.(isset($icon)?'<i class="fa fa-'.$icon.'"></i> ':'').$title.'</button>';
+    return '<button ' . $this->attributes($options) . '>' . (isset($icon) ? '<i class="fa fa-' . $icon . '"></i> ' : '') . $title . '</button>';
 });
 
 if (!function_exists('form')) {

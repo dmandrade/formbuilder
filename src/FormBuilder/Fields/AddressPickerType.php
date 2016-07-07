@@ -9,7 +9,8 @@ class AddressPickerType extends FormField
      * @param $tabName
      * @param $tabId
      */
-    public function addTab($tabName, $tabId){
+    public function addTab($tabName, $tabId)
+    {
         $this->options['tabs'][$tabId] = array(
             'name' => $tabName,
             'fields' => []
@@ -20,7 +21,8 @@ class AddressPickerType extends FormField
      * @param FormField $field
      * @param $tabId
      */
-    public function add(FormField $field, $tabId){
+    public function add(FormField $field, $tabId)
+    {
         $this->options['tabs'][$tabId]['fields'][] = $field;
     }
 

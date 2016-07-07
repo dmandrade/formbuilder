@@ -60,7 +60,7 @@ class Form
      *
      * @var bool
      */
-    protected $clientValidationEnabled = true;
+    protected $clientValidation = true;
 
     /**
      * Name of the parent form if any
@@ -223,7 +223,7 @@ class Form
      * @param FormField $field
      * @return $this
      */
-    protected function addField(FormField $field, $modify = false, $includeToForm=true)
+    protected function addField(FormField $field, $modify = false, $includeToForm = true)
     {
         if (!$modify && !$this->rebuilding) {
             $this->preventDuplicate($field->getRealName());
@@ -233,7 +233,7 @@ class Form
             $this->formOptions['files'] = true;
         }
 
-        if(!$includeToForm)
+        if (!$includeToForm)
             return $field;
 
         $this->fields[$field->getRealName()] = $field;
@@ -255,16 +255,7 @@ class Form
     {
         $offset = array_search($name, array_keys($this->fields));
 
-        $beforeFields = array_slice($this->fields, 0, $offset);
-        $afterFields = array_slice($this->fields, $offset);
-
-        $this->fields = $beforeFields;
-
-        $field = $this->add($fieldName, $type, $options, $modify);
-
-        $this->fields += $afterFields;
-
-        return $field;
+        return $this->addAtPosition($offset, $name, $fieldName, $type, $options, $modify);
     }
 
     /**
@@ -278,10 +269,15 @@ class Form
      */
     public function addAfter($name, $fieldName, $type = 'text', $options = [], $modify = false)
     {
-        $offset = array_search($name, array_keys($this->fields));
+        $offset = array_search($name, array_keys($this->fields)) + 1;
 
-        $beforeFields = array_slice($this->fields, 0, $offset + 1);
-        $afterFields = array_slice($this->fields, $offset + 1);
+        return $this->addAtPosition($offset, $name, $fieldName, $type, $options, $modify);
+    }
+
+    protected function addAtPosition($position, $name, $fieldName, $type = 'text', $options = [], $modify = false)
+    {
+        $beforeFields = array_slice($this->fields, 0, $position);
+        $afterFields = array_slice($this->fields, $position);
 
         $this->fields = $beforeFields;
 
@@ -499,12 +495,11 @@ class Form
      *   ...
      * ]
      */
-    protected function getFieldsByOption($setting, $default='')
+    protected function getFieldsByOption($setting, $default = '')
     {
         $sorted = array();
-        foreach ( $this->fields as $field )
-        {
-            if ( isset($field->options[$setting]) )
+        foreach ($this->fields as $field) {
+            if (isset($field->options[$setting]))
                 $field_setting = $field->options[$setting];
             else
                 $field_setting = $default;
@@ -575,7 +570,7 @@ class Form
         $this->pullFromOptions('data', 'addData');
         $this->pullFromOptions('model', 'setupModel');
         $this->pullFromOptions('errors_enabled', 'setErrorsEnabled');
-        $this->pullFromOptions('client_validation', 'setClientValidationEnabled');
+        $this->pullFromOptions('client_validation', 'setclientValidation');
         $this->pullFromOptions('template_prefix', 'setTemplatePrefix');
         $this->pullFromOptions('language_name', 'setLanguageName');
 
@@ -792,9 +787,9 @@ class Form
      *
      * @return boolean
      */
-    public function clientValidationEnabled()
+    public function clientValidation()
     {
-        return $this->clientValidationEnabled;
+        return $this->clientValidation;
     }
 
     /**
@@ -803,9 +798,9 @@ class Form
      * @param boolean $enable
      * @return $this
      */
-    public function setClientValidationEnabled($enable)
+    public function setclientValidation($enable)
     {
-        $this->clientValidationEnabled = (boolean)$enable;
+        $this->clientValidation = (boolean)$enable;
 
         return $this;
     }
@@ -1188,21 +1183,21 @@ class Form
     /**
      * Default actions buttons
      */
-    public function addDefaultActions($submitOptions=[], $backOptions=[])
+    public function addDefaultActions($submitOptions = [], $backOptions = [])
     {
         $submitOptions = array_replace_recursive([
             'label' => trans('form-builder::form.save'),
             'attr' => [
                 'class' => 'btn btn-primary btn-flat'
             ],
-        ],$submitOptions);
+        ], $submitOptions);
         $backOptions = array_replace_recursive([
             'label' => trans('form-builder::form.back'),
             'attr' => [
                 'class' => 'btn btn-danger pull-right btn-flat',
                 'onclick' => 'window.history.back()'
             ],
-        ],$backOptions);
+        ], $backOptions);
         $this->add('submit', 'submit', $submitOptions, false, true)
             ->add('back', 'button', $backOptions, false, true);
 
