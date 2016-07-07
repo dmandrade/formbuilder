@@ -438,22 +438,22 @@ class Form
     /**
      * Renders the rest of the form up until the specified field name
      *
-     * @param string $field_name
+     * @param string $fieldName
      * @param bool $showFormEnd
      * @param bool $showFields
      * @return string
      */
-    public function renderUntil($field_name, $showFormEnd = true, $showFields = true)
+    public function renderUntil($fieldName, $showFormEnd = true, $showFields = true)
     {
-        if (!$this->has($field_name)) {
-            $this->fieldDoesNotExist($field_name);
+        if (!$this->has($fieldName)) {
+            $this->fieldDoesNotExist($fieldName);
         }
 
         $fields = $this->getUnrenderedFields();
 
         $i = 1;
         foreach ($fields as $key => $value) {
-            if ($value->getRealName() == $field_name) {
+            if ($value->getRealName() == $fieldName) {
                 break;
             }
             $i++;
@@ -500,11 +500,11 @@ class Form
         $sorted = array();
         foreach ($this->fields as $field) {
             if (isset($field->options[$setting]))
-                $field_setting = $field->options[$setting];
+                $fieldSetting = $field->options[$setting];
             else
-                $field_setting = $default;
+                $fieldSetting = $default;
 
-            $sorted[$field_setting][] = $field;
+            $sorted[$fieldSetting][] = $field;
         }
         return $sorted;
     }
@@ -1116,7 +1116,7 @@ class Form
 
 
     /**
-     * If form is named form, modify names to be contained in single key (parent[child_field_name])
+     * If form is named form, modify names to be contained in single key (parent[child_fieldName])
      *
      * @param string $name
      * @return string

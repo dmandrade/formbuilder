@@ -55,12 +55,12 @@ trait FormTrait
             'model' => $model
         ]);
 
-        $form_content = view('form-builder::form.components.formgenerator.full', [
+        $formContent = view('form-builder::form.components.formgenerator.full', [
             'form' => $form
         ]);
 
         return view('form-builder::form.state.form', [
-            'form' => $form_content
+            'form' => $formContent
         ]);
     }
 
@@ -154,7 +154,7 @@ trait FormTrait
             'model' => $model
         ]);
 
-        $form_content = view('form-builder::form.components.formgenerator.info', [
+        $formContent = view('form-builder::form.components.formgenerator.info', [
             'form' => $form,
             'id' => $id,
             'route' => $this->getControllerNameForAction() . '@',
@@ -162,7 +162,7 @@ trait FormTrait
 
 
         return view('form-builder::form.state.form', [
-            'form' => $form_content
+            'form' => $formContent
         ]);
 
     }
