@@ -14,9 +14,6 @@
     }
   ],
   "autoload": {
-    "classmap": [
-      "database"
-    ],
     "psr-4": {
       "Dmandrade\\FormBuilder\\": "src/FormBuilder/"
     },
