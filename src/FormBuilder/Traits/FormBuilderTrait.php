@@ -4,7 +4,7 @@ namespace Dmandrade\FormBuilder\Traits;
 use Dmandrade\FormBuilder\FormBuilder;
 use Illuminate\Http\Request;
 
-trait FormTrait
+trait FormBuilderTrait
 {
 
     /**
@@ -47,31 +47,27 @@ trait FormTrait
      * @param string $name Full class name of the form class
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getEdit($id = '', $formName)
+    public function renderForm($viewName, $viewData=[], $id=null)
     {
         $model = (!empty($id)) ? $this->model->findOrFail($id) : $this->model;
         /** @var \Dmandrade\FormBuilder\Form $form */
-        $form = app(FormBuilder::class)->create(get_class($this->form), [
+        $form = app(FormBuilder::class)->create($this->form, [
             'model' => $model
         ]);
 
-        $formContent = view('form-builder::form.components.formgenerator.full', [
-            'form' => $form
-        ]);
+        $viewData = array_merge_recursive(['form' => $form], $viewData);
 
-        return view('form-builder::form.state.form', [
-            'form' => $formContent
-        ]);
+        return view($viewName, $viewData);
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|mixed|null
      */
-    public function postEdit(Request $request)
+    public function postForm(Request $request)
     {
         /** @var \Dmandrade\FormBuilder\Form $form */
-        $form = app(FormBuilder::class)->create(get_class($this->form), [
+        $form = app(FormBuilder::class)->create($this->form, [
             'model' => $this->model
         ]);
 
@@ -92,7 +88,7 @@ trait FormTrait
             return $result;
         }
 
-        return redirect()->to(action($this->getControllerNameForAction() . '@getIndex'));
+        return redirect()->to(action($this->getControllerNameForAction() . '@index'));
 
     }
 
@@ -150,11 +146,11 @@ trait FormTrait
     {
         $model = (!empty($id)) ? $this->model->findOrFail($id) : $this->model;
         /** @var \Dmandrade\FormBuilder\Form $form */
-        $form = app(FormBuilder::class)->create(get_class($this->form), [
+        $form = app(FormBuilder::class)->create($this->form, [
             'model' => $model
         ]);
 
-        $formContent = view('form-builder::form.components.formgenerator.info', [
+        $formContent = view('form-builder::form.layouts.info', [
             'form' => $form,
             'id' => $id,
             'route' => $this->getControllerNameForAction() . '@',

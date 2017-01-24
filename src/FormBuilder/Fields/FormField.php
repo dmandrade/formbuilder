@@ -270,7 +270,7 @@ abstract class FormField
             $this->addErrorClass();
         }
 
-        if ($this->parent->clientValidationEnabled()) {
+        if ($this->parent->clientValidation()) {
             if ($this->getOption('required') === true || isset($parsedRules['required'])) {
                 $lblClass = $this->getOption('label_attr.class', '');
                 $requiredClass = $helper->getConfig('defaults.required_class', 'required');
@@ -428,6 +428,17 @@ abstract class FormField
     public function isRendered()
     {
         return $this->rendered;
+    }
+
+    /**
+     * Check if the field is rendered
+     *
+     * @return bool
+     */
+    public function setRendered()
+    {
+        $this->rendered = true;
+        return $this->parent;
     }
 
     /**

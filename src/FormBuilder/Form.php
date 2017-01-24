@@ -4,6 +4,7 @@ use Dmandrade\FormBuilder\Fields\FormField;
 use Dmandrade\FormBuilder\Traits\Bindable;
 use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -15,7 +16,7 @@ class Form
     /**
      * All fields that are added
      *
-     * @var array
+     * @var FormField[]
      */
     protected $fields = [];
 
@@ -570,7 +571,7 @@ class Form
         $this->pullFromOptions('data', 'addData');
         $this->pullFromOptions('model', 'setupModel');
         $this->pullFromOptions('errors_enabled', 'setErrorsEnabled');
-        $this->pullFromOptions('client_validation', 'setclientValidation');
+        $this->pullFromOptions('client_validation', 'setClientValidation');
         $this->pullFromOptions('template_prefix', 'setTemplatePrefix');
         $this->pullFromOptions('language_name', 'setLanguageName');
 
@@ -676,21 +677,15 @@ class Form
      *
      * @param mixed $model
      * @return $this
-     * @deprecated deprecated since 1.6.31, will be removed in 1.7 - pass model as option when creating a form
      */
     public function setModel($model)
     {
-        $this->model = $model;
-
-        $this->setupNamedModel();
-
-        $this->rebuildForm();
-
-        return $this;
+        return $this->setupModel($model);
     }
 
     /**
      * Setup model for form, add namespace if needed for child forms
+     * @param Model $model
      * @return $this
      */
     protected function setupModel($model)
@@ -698,6 +693,10 @@ class Form
         $this->model = $model;
 
         $this->setupNamedModel();
+
+        if($this->model->exists){
+            $this->add($model->getKeyName(), 'hidden');
+        }
 
         return $this;
     }
@@ -798,7 +797,7 @@ class Form
      * @param boolean $enable
      * @return $this
      */
-    public function setclientValidation($enable)
+    public function setClientValidation($enable)
     {
         $this->clientValidation = (boolean)$enable;
 
@@ -1198,8 +1197,10 @@ class Form
                 'onclick' => 'window.history.back()'
             ],
         ], $backOptions);
-        $this->add('submit', 'submit', $submitOptions, false, true)
-            ->add('back', 'button', $backOptions, false, true);
+        $this->submit = $this->add('submit', 'submit', $submitOptions, false, true);
+        $this->submit->setRendered();
+        $this->back = $this->add('back', 'button', $backOptions, false, true);
+        $this->back->setRendered();
 
     }
 

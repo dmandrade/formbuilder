@@ -115,7 +115,7 @@ class ChildFormType extends ParentType
                 'language_name' => $this->parent->getLanguageName()
             ];
 
-            if (!$this->parent->clientValidationEnabled()) {
+            if (!$this->parent->clientValidation()) {
                 $options['client_validation'] = false;
             }
 
@@ -142,8 +142,8 @@ class ChildFormType extends ParentType
                 $class->setLanguageName($this->parent->getLanguageName());
             }
 
-            if (!$this->parent->clientValidationEnabled()) {
-                $class->setClientValidationEnabled(false);
+            if (!$this->parent->clientValidation()) {
+                $class->setClientValidation(false);
             }
 
             if (!$this->parent->haveErrorsEnabled()) {
