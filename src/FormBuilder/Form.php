@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
 
 class Form
@@ -638,6 +639,21 @@ class Form
     }
 
     /**
+     * Set form action name
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setFormName($name)
+    {
+
+        $this->formOptions['name'] = $name;
+        $this->formOptions['id'] = $name;
+
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getName()
@@ -651,7 +667,7 @@ class Form
      *
      * @return $this
      */
-    public function setName($name, $rebuild = true)
+    public function setName($name, $rebuild = false)
     {
         $this->name = $name;
 
@@ -694,7 +710,7 @@ class Form
 
         $this->setupNamedModel();
 
-        if($this->model->exists){
+        if($model instanceof Model and $model->exists){
             $this->add($model->getKeyName(), 'hidden');
         }
 

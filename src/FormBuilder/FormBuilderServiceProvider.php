@@ -19,7 +19,7 @@ class FormBuilderServiceProvider extends ServiceProvider
         $this->commands('Dmandrade\FormBuilder\Console\FormMakeCommand');
 
         $this->registerHtmlIfNeeded();
-        $this->registerFormIfHeeded();
+        $this->registerFormIfNeeded();
 
         $this->mergeConfigFrom(
             __DIR__ . '/../config/config.php',
@@ -76,7 +76,7 @@ class FormBuilderServiceProvider extends ServiceProvider
     /**
      * Add Laravel Form to container if not already set
      */
-    private function registerFormIfHeeded()
+    private function registerFormIfNeeded()
     {
         if (!$this->app->offsetExists('form')) {
 
