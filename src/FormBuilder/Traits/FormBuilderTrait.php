@@ -3,6 +3,7 @@ namespace Dmandrade\FormBuilder\Traits;
 
 use Dmandrade\FormBuilder\FormBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 trait FormBuilderTrait
 {
@@ -14,6 +15,10 @@ trait FormBuilderTrait
     protected $form;
     protected $model;
 
+    /**
+     * @var string
+     */
+    protected $redirectTo = null;
 
     /**
      * Create a Form instance
@@ -43,19 +48,22 @@ trait FormBuilderTrait
     }
 
     /**
-     * @param string $id
-     * @param string $name Full class name of the form class
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param $viewName View name
+     * @param array $viewData View parameters
+     * @param array $options Form options
+     * @param array $data Form data
+     * @param null $id Form model current id
+     * @return \BladeView|bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function renderForm($viewName, $viewData=[], $id=null)
+    public function renderForm($viewName, $options = [], $data = [], $id=null)
     {
         $model = (!empty($id)) ? $this->model->findOrFail($id) : $this->model;
         /** @var \Dmandrade\FormBuilder\Form $form */
-        $form = app(FormBuilder::class)->create($this->form, [
+        $form = app(FormBuilder::class)->create($this->form, array_merge([
             'model' => $model
-        ]);
+        ], $options), $data);
 
-        $viewData = array_merge_recursive(['form' => $form], $viewData);
+        $viewData = ['form' => $form];
 
         return view($viewName, $viewData);
     }
@@ -72,7 +80,7 @@ trait FormBuilderTrait
         ]);
 
 
-        if ($form->isValid()) {
+        if (!$form->isValid()) {
             return $form->validateAndRedirectBack();
         }
 
@@ -88,7 +96,7 @@ trait FormBuilderTrait
             return $result;
         }
 
-        return redirect()->to(action($this->getControllerNameForAction() . '@index'));
+        return $this->getRedirection();
 
     }
 
@@ -117,13 +125,31 @@ trait FormBuilderTrait
         return null;
     }
 
+    public function setRedirectionTo($action, $parameters = [])
+    {
+        $this->redirectTo = action($this->getControllerNameForAction() . '@'.$action, $parameters);
+
+        return $this;
+    }
 
     /**
-     * @param $data
+     * @return \Illuminate\Http\RedirectResponse|mixed|null
+     */
+    public function getRedirection(){
+
+        if(empty($this->redirectTo)){
+            return Redirect::back();
+        }
+
+        return Redirect::to($this->redirectTo);
+    }
+
+    /**
+     * @param array $data
      * @param Request $request
      * @return null
      */
-    protected function save($data, Request $request)
+    protected function save(array $data, Request $request)
     {
 
         $primary = $request->get($this->model->getKeyName());

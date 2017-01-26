@@ -1171,7 +1171,7 @@ class Form
      */
     public function validateAndRedirectBack()
     {
-        return Redirect::back()->withErrors($this->validate())->withInput($this->formHelper->getRequest()->all());
+        return Redirect::back()->withErrors($this->validate())->withInput($this->getRequest()->all());
 
     }
 

@@ -96,6 +96,9 @@ abstract class FormField
         $this->type = $type;
         $this->parent = $parent;
         $this->formHelper = $this->parent->getFormHelper();
+        if($this->type!='hidden'){
+            $this->valueProperty = $this->defaultValueProperty;
+        }
         $this->setTemplate();
         $this->setDefaultOptions($options);
         $this->setupValue();
@@ -111,7 +114,11 @@ abstract class FormField
         }
 
         if (($value === null || $value instanceof \Closure) && !$isChild) {
-            $this->setValue($this->getModelValueAttribute($this->parent->getModel(), $this->name));
+            $value = $this->getModelValueAttribute($this->parent->getModel(), $this->name);
+            if($value == null){
+                $value = $this->parent->getData($this->name);
+            }
+            $this->setValue($value);
         } elseif (!$isChild) {
             $this->hasDefault = true;
         }
@@ -152,6 +159,9 @@ abstract class FormField
         // Override default value with value
         if (!$this->isValidValue($value) && $this->isValidValue($defaultValue)) {
             $this->setOption($this->valueProperty, $defaultValue);
+        }
+        if ($this->type=='hidden' && !$this->isValidValue($defaultValue)) {
+            $this->setOption($this->defaultValueProperty, $value);
         }
 
         if (!$this->needsLabel()) {
@@ -505,7 +515,6 @@ abstract class FormField
         if (!$this->isValidValue($value)) {
             $value = $this->getOption($this->defaultValueProperty);
         }
-
         $this->options[$this->valueProperty] = $value;
 
         return $this;

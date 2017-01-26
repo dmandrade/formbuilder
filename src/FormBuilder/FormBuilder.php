@@ -41,8 +41,10 @@ class FormBuilder
             );
         }
 
+        /** @var Form $form */
         $form = $this->container
-            ->make($class)
+            ->make($class);
+        $form
             ->addData($data)
             ->setRequest($this->container->make('request'))
             ->setFormHelper($this->formHelper)
