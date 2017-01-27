@@ -293,6 +293,16 @@ class FormHelper
         return str_replace(['.', '[]', '[', ']'], ['_', '', '.', ''], $string);
     }
 
+    function transformDotToArraySyntax($string) {
+        if(strpos($string, '.')) {
+            $string = preg_replace('/\./', '[', $string, 1);
+            $string = str_replace('.', '][', $string);
+            $string .= ']';
+        }
+
+        return $string;
+    }
+
     /**
      * @return TranslatorInterface
      */

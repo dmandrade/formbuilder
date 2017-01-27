@@ -1,9 +1,12 @@
 <?php
 namespace Dmandrade\FormBuilder\Traits;
 
+use Dmandrade\FormBuilder\Form;
 use Dmandrade\FormBuilder\FormBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+use Response;
 
 trait FormBuilderTrait
 {
@@ -48,12 +51,11 @@ trait FormBuilderTrait
     }
 
     /**
-     * @param $viewName View name
-     * @param array $viewData View parameters
-     * @param array $options Form options
-     * @param array $data Form data
-     * @param null $id Form model current id
-     * @return \BladeView|bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param $viewName
+     * @param array $options
+     * @param array $data
+     * @param null $id
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
     public function renderForm($viewName, $options = [], $data = [], $id=null)
     {
@@ -70,7 +72,7 @@ trait FormBuilderTrait
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|mixed|null
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
     public function postForm(Request $request)
     {
@@ -84,13 +86,13 @@ trait FormBuilderTrait
             return $form->validateAndRedirectBack();
         }
 
-        $result = $this->beforeSave();
+        $result = $this->beforeSave($form, $request);
 
         if ($result != null) {
             return $result;
         }
 
-        $result = $this->save($this->dataToSave($request), $request);
+        $result = $this->save($this->dataToSave($request), $form, $request);
 
         if ($result != null) {
             return $result;
@@ -110,17 +112,31 @@ trait FormBuilderTrait
     }
 
     /**
+     * @param Form $form
+     * @param Request $request
      * @return null
      */
-    protected function beforeSave()
+    protected function beforeSave(Form $form, Request $request)
     {
         return null;
     }
 
     /**
+     * @param Form $form
+     * @param Request $request
      * @return null
      */
-    protected function afterSave()
+    protected function afterSave(Form $form, Request $request)
+    {
+        return null;
+    }
+
+    /**
+     * @param Form $form
+     * @param Request $request
+     * @return null
+     */
+    protected function afterUpdate(Form $form, Request $request)
     {
         return null;
     }
@@ -133,7 +149,7 @@ trait FormBuilderTrait
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse|mixed|null
+     * @return \Illuminate\Http\Response
      */
     public function getRedirection(){
 
@@ -141,26 +157,30 @@ trait FormBuilderTrait
             return Redirect::back();
         }
 
-        return Redirect::to($this->redirectTo);
+        return Response::redirectTo($this->redirectTo);
     }
 
     /**
      * @param array $data
+     * @param Form $form
      * @param Request $request
      * @return null
      */
-    protected function save(array $data, Request $request)
+    protected function save(array $data, Form $form, Request $request)
     {
 
         $primary = $request->get($this->model->getKeyName());
         if (empty($primary)) {
             $this->model = $this->model->create($data);
-        } else {
+            return $this->afterSave($form, $request);
+        }
+        if (!$this->model->exists) {
             $this->model = $this->model->find($primary);
-            $this->model->update($data);
         }
 
-        return $this->afterSave();
+        $this->model->update($data);
+
+        return $this->afterUpdate($form, $request);
     }
 
 

@@ -211,6 +211,9 @@ abstract class FormField
 
     protected function prepareRender($name, $options = [], $showLabel = true, $showField = true, $showError = true)
     {
+        if(!isset($options['attr']['name'])){
+            $options['attr']['name'] = $this->formHelper->transformDotToArraySyntax($name);
+        }
         return $this->formHelper->getView()->make(
             $this->getViewTemplate(),
             [
