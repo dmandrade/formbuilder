@@ -96,7 +96,7 @@ abstract class FormField
         $this->type = $type;
         $this->parent = $parent;
         $this->formHelper = $this->parent->getFormHelper();
-        if($this->type!='hidden'){
+        if($this->getType()!='hidden'){
             $this->valueProperty = $this->defaultValueProperty;
         }
         $this->setTemplate();
@@ -160,7 +160,7 @@ abstract class FormField
         if (!$this->isValidValue($value) && $this->isValidValue($defaultValue)) {
             $this->setOption($this->valueProperty, $defaultValue);
         }
-        if ($this->type=='hidden' && !$this->isValidValue($defaultValue)) {
+        if ($this->getType()=='hidden' && !$this->isValidValue($defaultValue)) {
             $this->setOption($this->defaultValueProperty, $value);
         }
 
@@ -214,12 +214,13 @@ abstract class FormField
         if(!isset($options['attr']['name'])){
             $options['attr']['name'] = $this->formHelper->transformDotToArraySyntax($name);
         }
+
         return $this->formHelper->getView()->make(
             $this->getViewTemplate(),
             [
-                'name' => $name,
+                'name' => str_replace('.', '_', $this->getNameKey()),
                 'nameKey' => $this->getNameKey(),
-                'type' => $this->type,
+                'type' => $this->getType(),
                 'options' => $options,
                 'noEdit' => false,
                 'showLabel' => $showLabel,
@@ -585,9 +586,9 @@ abstract class FormField
     protected function needsLabel()
     {
         // If field is <select> and child of choice, we don't need label for it
-        $isChildSelect = $this->type == 'select' && $this->getOption('is_child') === true;
+        $isChildSelect = $this->getType() == 'select' && $this->getOption('is_child') === true;
 
-        if ($this->type == 'hidden' || $isChildSelect) {
+        if ($this->getType() == 'hidden' || $isChildSelect) {
             return false;
         }
 

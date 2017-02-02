@@ -5,6 +5,16 @@ namespace Dmandrade\FormBuilder\Fields;
 class DatePickerType extends FormField
 {
 
+    /**
+     * Get the type of the field
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return 'text';
+    }
+
     protected function getTemplate()
     {
         return 'datepicker';

@@ -38,6 +38,28 @@ trait FormBuilderTrait
     }
 
     /**
+     * @param Form|string $form
+     * @return $this
+     */
+    public function setForm($form)
+    {
+        $this->form = $form;
+
+        return $this;
+    }
+
+    /**
+     * @param Model $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
      * Create a plain Form instance
      *
      * @param array $options Options to pass to the form
