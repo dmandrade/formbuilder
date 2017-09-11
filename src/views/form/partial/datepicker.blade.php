@@ -14,11 +14,22 @@
             @else
                 <?php $options['attr']['class'] .= ' datepicker'; ?>
                 @if (! empty($options['range']))
-                    <?php $options['attr']['class'] .= ' input-sm'; unset($options['attr']['id']); ?>
+                    <?php
+                        $options['attr']['class'] .= ' input-sm'; unset($options['attr']['id']);
+                        $startAttr = $endAttr = $options['attr'];
+                        $startAttr['name'] .= '[start]';
+                        $endAttr['name'] .= '[end]';
+
+                        $startValue = $endValue = $options['default_value'];
+                        if(is_array($options['default_value'])){
+                            $startValue = $options['default_value']['start'];
+                            $endValue = $options['default_value']['end'];
+                        }
+                    ?>
                     <div id="{{ $id }}" class="input-daterange input-group">
-                        {!! Form::input($type, $name . '[start]', $options['default_value'], $options['attr']) !!}
+                        {!! Form::input($type, $name, $startValue, $startAttr) !!}
                         <span class="input-group-addon">{{ trans('form-builder::form.to') }}</span>
-                        {!! Form::input($type, $name . '[end]', $options['default_value'], $options['attr']) !!}
+                        {!! Form::input($type, $name, $endValue, $endAttr) !!}
                     </div>
                 @else
                     {!! Form::input($type, $name, $options['default_value'], $options['attr']) !!}
@@ -39,7 +50,7 @@
                 jQuery('#{!! $id !!} .input-sm')
             @else
                 jQuery('#{!! $name !!}')
-            @endif.datepicker({
+            @endif.datepicker(jQuery.extend({
                 format: '{!! $options['format'] !!}',
                 @if (! empty($options['todayHighlight']))
                 todayHighlight: true,
@@ -51,7 +62,7 @@
                 language: '{!! $options['language'] !!}',
                 @endif
                 orientation: "left"
-            }).on('changeDate', function (selected) {
+            }, {!! json_encode($options['config']) !!})).on('changeDate', function (selected) {
                 var startDate = new Date(selected.date.valueOf());
                 startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
 
